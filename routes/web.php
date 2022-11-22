@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\ActivateAccount;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/test', function () {
     return view('test');
 });
