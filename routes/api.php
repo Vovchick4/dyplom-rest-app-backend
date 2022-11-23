@@ -74,6 +74,9 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
         Route::get('login/{provider}', 'Auth\SocialController@login')->name('social.login');
     });
 
+    // Tables
+    Route::get('tables', 'TableController@index');
+
     Route::group(['middleware' => ['auth:user', 'scope:user', 'user.status']], static function () {
         // plates
         Route::group(['middleware' => ['plate.access']], static function () {
@@ -108,7 +111,7 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
         // super admin
         Route::group(['middleware' => ['super-admin']], static function () {
             Route::resource('restaurants', 'RestaurantController')->only([
-                'index', 'show', 'store' ,'update', 'destroy'
+                'index', 'show', 'store', 'update', 'destroy'
             ]);
 
             Route::get('restaurants/search/{searchText}', 'RestaurantController@search')
