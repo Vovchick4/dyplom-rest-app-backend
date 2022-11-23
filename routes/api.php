@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Api\Client', 'prefix' => 'client', 'as' => 'client.'], static function () {
 
+    //Add new tables
+    Route::post("tables", "TableController@store");
+
     Route::group(['prefix' => 'auth'], static function () {
         Route::middleware(['auth:client', 'scope:client'])->get('get-user', 'Auth\LoginController@getUser')->name('get-user');
         Route::post('login', 'Auth\LoginController@login')->name('login');
@@ -62,6 +65,7 @@ Route::group(['namespace' => 'Api\Client', 'prefix' => 'client', 'as' => 'client
 });
 
 Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.'], static function () {
+
     Route::group(['prefix' => 'auth'], static function () {
         Route::middleware(['auth:user', 'scope:user'])->get('get-user', 'Auth\LoginController@getUser')->name('get-user');
         Route::post('login', 'Auth\LoginController@login')->name('login');
@@ -74,10 +78,9 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
         Route::get('login/{provider}', 'Auth\SocialController@login')->name('social.login');
     });
 
-    // Tables
-    Route::get('tables', 'TableController@index');
-
     Route::group(['middleware' => ['auth:user', 'scope:user', 'user.status']], static function () {
+        // Tables
+        Route::get('tables', 'TableController@index')->name("tables.index");
         // plates
         Route::group(['middleware' => ['plate.access']], static function () {
             Route::resource('plates', 'PlateController')->only(['show', 'update', 'destroy']);

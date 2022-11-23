@@ -35,11 +35,20 @@ class TableController extends Controller
      */
     public function index(TableIndexRequest $request): JsonResponse
     {
-        $table = Table::where("rest_id", $request->header("rest_id"));
-        $res = new TableCollection($table);
-        $data = $res->response()->getData(true);
-        $data['status'] = 200;
-        $data['message'] = __('messages.ok');
-        return response()->json($data);
+        $user = $request->user();
+        // get user restaurant_id
+        $restaurantId = $user->restaurant_id;
+        if (
+            $user->role == self::SUPER_ADMIN
+            && !empty($request->header('restaurant'))
+        ) {
+            $restaurantId = $request->header('restaurant');
+        }
+        $table = Table::where("rest_id", $restaurantId)->get();
+        // $res = new TableCollection($table);
+        // $data = $res->response()->getData(true);
+        // $data['status'] = 200;
+        // $data['message'] = __('messages.ok');
+        return response()->json(['data' => $table, 'status' => 200, 'message' => __('messages.table_index')], 200);
     }
 }

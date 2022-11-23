@@ -13,7 +13,7 @@ class TableIndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class TableIndexRequest extends FormRequest
         return [
             'table_number' => 'integer',
             'client_id' => 'integer',
-            'rest_id' => 'required|integer',
+            'rest_id' => 'integer',
             'category' => 'in:waiter,bill_request'
         ];
     }
