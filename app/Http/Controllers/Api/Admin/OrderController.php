@@ -109,7 +109,6 @@ class OrderController extends Controller
     public function index(OrderIndexRequest $request): JsonResponse
     {
         $user = $request->user();
-
         // get user restaurant_id
         $restaurantId = $user->restaurant_id;
 

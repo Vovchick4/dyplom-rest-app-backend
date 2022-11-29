@@ -113,6 +113,7 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
 
         // super admin
         Route::group(['middleware' => ['super-admin']], static function () {
+
             Route::resource('restaurants', 'RestaurantController')->only([
                 'index', 'show', 'store', 'update', 'destroy'
             ]);
