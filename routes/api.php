@@ -81,12 +81,13 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
     Route::group(['middleware' => ['auth:user', 'scope:user', 'user.status']], static function () {
         // Tables
         Route::get('tables', 'TableController@index')->name("tables.index");
+
         // plates
+        Route::post('plates', 'PlateController@store')->name('plates.store');
+        Route::get('plates', 'PlateController@index')->name('plates.index');
         Route::group(['middleware' => ['plate.access']], static function () {
             Route::resource('plates', 'PlateController')->only(['show', 'update', 'destroy']);
         });
-        Route::post('plates', 'PlateController@store')->name('plates.store');
-        Route::get('plates', 'PlateController@index')->name('plates.index');
         // categories
         Route::group(['middleware' => ['category.access']], static function () {
             Route::resource('categories', 'CategoryController')->only(['show', 'update', 'destroy']);
