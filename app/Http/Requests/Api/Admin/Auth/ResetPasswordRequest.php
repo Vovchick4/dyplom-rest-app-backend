@@ -46,5 +46,4 @@ class ResetPasswordRequest extends FormRequest
 
         throw new ValidationException($validator, $response);
     }
-
 }
