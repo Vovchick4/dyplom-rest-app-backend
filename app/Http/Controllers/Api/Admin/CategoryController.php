@@ -10,6 +10,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Requests\Api\Admin\CategoryStoreRequest;
 use App\Http\Requests\Api\Admin\CategoryUpdateRequest;
 use App\Http\Requests\Api\Admin\CategoryIndexRequest;
+use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\PlateResource;
 use App\Models\Plate;
 use Illuminate\Support\Facades\DB;
@@ -78,12 +79,14 @@ class CategoryController extends Controller
             })
             ->when(request('parent_id'), function ($query) {
                 $query->where('categories.parent_id', request('parent_id'));
-            })
-            ->get();
+            })->paginate(20);
 
-        $data = CategoryResource::collection($categories);
-
-        return response()->json(['data' => $data, 'status' => 200, 'message' => __('message.ok'),]);
+        // $data = CategoryResource::collection($categories);
+        $resource = new CategoryCollection($categories);
+        $data = $resource->response()->getData(true);
+        $data['status'] = 200;
+        $data['message'] = __('messages.ok');
+        return response()->json($data);
     }
 
     /**
@@ -396,11 +399,11 @@ class CategoryController extends Controller
         $plateIds = request('plate_ids');
 
         $category->plates()->sync($plateIds);
-//        DB::transaction(function () use ($category, $plateIds) {
-//            $category->plates()->update(['category_id' => null]);
-//
-//            Plate::whereIn('id', $plateIds)->update(['category_id' => $category->id]);
-//        });
+        //        DB::transaction(function () use ($category, $plateIds) {
+        //            $category->plates()->update(['category_id' => null]);
+        //
+        //            Plate::whereIn('id', $plateIds)->update(['category_id' => $category->id]);
+        //        });
 
         return response()->json(['data' => null, 'status' => 200, 'message' => __('messages.ok')]);
     }

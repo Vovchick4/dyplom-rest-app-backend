@@ -101,12 +101,13 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
         Route::post('categories', 'CategoryController@store')->name('categories.store');
         Route::get('categories', 'CategoryController@index')->name('categories.index');
         // orders
+        Route::get('orders-invoices', 'OrderController@orderInvoices')->name('orders.orderInvoices');
         Route::group(['middleware' => ['order.access']], static function () {
             Route::resource('orders', 'OrderController')->only(['show', 'update', 'destroy']);
         });
         Route::get('orders', 'OrderController@index')->name('orders.index');
-        // users
 
+        // users
         Route::middleware(['auth:user', 'scope:user', 'user.status'])->patch('users/update', 'UserController@update')->name('users.update');
         Route::resource('users', 'UserController')->only([
             'index', 'show', 'destroy'

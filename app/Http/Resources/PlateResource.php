@@ -26,6 +26,7 @@ class PlateResource extends JsonResource
             'active' => $this->active,
             'quantity' => $this->quantity,
             'weight' => $this->weight,
+            'category_id' => $this->categories->pluck('id'),
             'restaurant_id' => $this->restaurant_id,
             'checked' => isset($request->category) ?? $this->categories->pluck('id')->contains($request->category->id) ? true : false,
             'price' => $this->pivot ? $this->pivot->price : $this->price,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\OrderGetInvoicesRequest;
 use App\Http\Requests\Api\Admin\OrderIndexRequest;
 use App\Http\Requests\Api\Admin\OrderUpdateRequest;
 use App\Http\Resources\OrderCollection;
@@ -145,6 +146,117 @@ class OrderController extends Controller
         $data['message'] = __('messages.ok');
 
         return response()->json($data);
+    }
+
+    /**
+     * Get list of orders.
+     *
+     * @OA\Get(
+     *   path="/api/admin/orders",
+     *   description="Get list of orders; Authorization: accessToken;",
+     *   tags={"Admin Orders"},
+     *   security={{"passport":{}}},
+     *   @OA\Parameter(
+     *     name="client_id",
+     *     in="query",
+     *     required=false,
+     *     description="List orders where client_id",
+     *     example="25",
+     *     @OA\Schema(
+     *     type="string",
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="status",
+     *     in="query",
+     *     required=false,
+     *     description="List orders where status",
+     *     example="in_process",
+     *     @OA\Schema(
+     *     type="string",
+     *     enum={"new", "viewed", "in_process", "completed", "canceled"},
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="payment_status",
+     *     in="query",
+     *     required=false,
+     *     description="List orders where payment_status",
+     *     example="pending",
+     *     @OA\Schema(
+     *     type="string",
+     *     enum={"pending", "paid", "not_paid"},
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="is_takeaway",
+     *     in="query",
+     *     required=false,
+     *     description="List orders where is_takeaway",
+     *     example="1",
+     *     @OA\Schema(
+     *     type="string",
+     *     enum={"0", "1"},
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="is_online_payment",
+     *     in="query",
+     *     required=false,
+     *     description="List orders where is_online_payment",
+     *     example="1",
+     *     @OA\Schema(
+     *     type="string",
+     *     enum={"0", "1"},
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     required=false,
+     *     description="Current page number",
+     *     example="1",
+     *     @OA\Schema(
+     *     type="number",
+     *     ),
+     *   ),
+     *   @OA\Parameter(
+     *     name="per_page",
+     *     in="query",
+     *     required=false,
+     *     description="Items per page",
+     *     example="1",
+     *     @OA\Schema(
+     *     type="number",
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response="200",
+     *     description="Get list of orders",
+     *     @OA\JsonContent(ref="#/components/schemas/AdminOrderSchema"),
+     *   ),
+     * )
+     *
+     * @param OrderGetInvoicesRequest $request
+     * @return JsonResponse
+     */
+    public function orderInvoices(OrderGetInvoicesRequest $request): JsonResponse
+    {
+        $user = $request->user();
+
+        // get user restaurant_id
+        $restaurantId = $user->restaurant_id;
+
+        if (
+            $user->role == self::SUPER_ADMIN
+            && !empty($request->header('restaurant'))
+        ) {
+            $restaurantId = $request->header('restaurant');
+        }
+
+        $order = Order::where('restaurant_id', $restaurantId)
+            ->whereBetween('created_at', [request('first_date'), request('second_date')])->get();
+        return response()->json(['data' => $order, 'status' => 200, 'message' => __('messages.ok')]);
     }
 
     /**
