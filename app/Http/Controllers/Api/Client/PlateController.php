@@ -170,10 +170,12 @@ class PlateController extends Controller
     public function search(Request $request, int $restaurantId, string $searchText): JsonResponse
     {
         $plates = Plate::select('plates.*')
-            ->distinct('plates.id')
-            ->join('categories', 'categories.id', '=', 'plates.category_id')
+            // ->distinct('plates.id')
+            // ->join('categories', 'categories.id', '=', 'plates.category_id')
             ->where('plates.restaurant_id', $restaurantId)
-            ->active()
+            ->when(1 !== null, function ($query) {
+                $query->where('plates.active', 1);
+            })
             ->whereHas('translations', function ($query) use ($searchText) {
                 $query->where('name', 'like', "%$searchText%");
             })

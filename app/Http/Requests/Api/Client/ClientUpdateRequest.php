@@ -26,7 +26,7 @@ class ClientUpdateRequest extends FormRequest
         return [
             'name' => 'string|min:2|max:256',
             'phone' => 'string|min:8|max:15|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'email' => 'email|unique:users,email',
+            // 'email' => 'email|unique:users,email',
             'password' => 'string|min:6|max:20',
         ];
     }

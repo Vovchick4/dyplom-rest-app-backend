@@ -63,6 +63,25 @@ class StatisticsRestaurantController extends Controller
         return response()->json(['data' => $data, 'status' => 200, 'message' => 'message.ok'], 200);
     }
 
+    public function reviews(Request $request)
+    {
+        $user = $request->user();
+
+        // get user restaurant_id
+        $restaurantId = $user->restaurant_id;
+
+        if (
+            $user->role == self::SUPER_ADMIN
+            && !empty($request->header('restaurant'))
+        ) {
+            $restaurantId = $request->header('restaurant');
+        }
+
+        $data = StatisticsRestaurant::where('restaurant_id', $restaurantId)->get();
+
+        return response()->json(['data' => $data, 'status' => 200, 'message' => 'message.ok'], 200);
+    }
+
     private function countCategoriesCount(int $count, int $totalRew)
     {
         if ($count == 0) {

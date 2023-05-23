@@ -81,7 +81,7 @@ Route::group(['namespace' => 'Api\Admin', 'prefix' => 'admin', 'as' => 'admin.']
     Route::group(['middleware' => ['auth:user', 'scope:user', 'user.status']], static function () {
         //StatisticsRestaurantController
         Route::get('statistics/restaurant', 'StatisticsRestaurantController@index')->name('statistics.index');
-
+        Route::get('statistics/restaurant/reviews', 'StatisticsRestaurantController@reviews')->name('statistics.reviews');
         // Tables
         Route::get('tables', 'TableController@index')->name("tables.index");
 
