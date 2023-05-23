@@ -72,10 +72,15 @@ class PlateController extends Controller
     public function index(PlateIndexRequest $request, int $restaurantId)
     {
         $perPage = (int) request('per_page', 9);
-        $plates = Plate::where('plates.restaurant_id', $restaurantId)
-            ->active()
-            ->when(request('category_id'), function ($query) {
-                $query->where('plates.category_id', request('category_id'));
+
+        $plates = Plate::where('restaurant_id', $restaurantId)
+            ->when(1 !== null, function ($query) {
+                $query->where('plates.active', 1);
+            })
+            ->when(request('category_id'), function ($query) use ($request) {
+                $query->whereHas('categories', function ($query) use ($request) {
+                    $query->where('categories.id', $request->input('category_id'));
+                });
             })
             ->paginate($perPage);
 
