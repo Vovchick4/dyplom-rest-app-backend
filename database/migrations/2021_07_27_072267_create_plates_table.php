@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePlatesTable extends Migration
 {
@@ -30,7 +31,7 @@ class CreatePlatesTable extends Migration
             $table->string('weight', 255)
                 ->nullable();
             $table->timestamps();
-			$table->softDeletes();
+            $table->softDeletes();
         });
     }
 

@@ -74,6 +74,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Restaurant::class);
     }
+    public function statisticsRestaurant()
+    {
+        return $this->hasMany(StatisticsRestaurant::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

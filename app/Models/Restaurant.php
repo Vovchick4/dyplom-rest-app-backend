@@ -21,7 +21,7 @@ class Restaurant extends Model
     ];
 
     protected $casts = [
-      'settings' => 'array'
+        'settings' => 'array'
     ];
     /*
     |--------------------------------------------------------------------------
@@ -41,6 +41,10 @@ class Restaurant extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function statisticsRestaurant()
+    {
+        return $this->hasMany(StatisticsRestaurant::class);
+    }
     public function categories()
     {
         return $this->hasMany(Category::class);
