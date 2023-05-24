@@ -24,9 +24,9 @@ class RestaurantUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required', 'string', 'min:2', 'max:256',
-            'address' => 'required', 'string', 'min:2', 'max:256',
-            'logo' => 'file|mimes:jpg,jpeg,png|max:20480',
+            // 'name' => 'required', 'string', 'min:2', 'max:256',
+            // 'address' => 'required', 'string', 'min:2', 'max:256',
+            // 'logo' => 'file|mimes:jpg,jpeg,png|max:20480',
         ];
     }
 }

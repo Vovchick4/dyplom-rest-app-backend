@@ -205,6 +205,28 @@ class RestaurantController extends Controller
         return response()->json(['data' => $data, 'status' => 200, 'message' => __('messages.restaurant_updated')]);
     }
 
+    public function editRest(RestaurantUpdateRequest $request, Restaurant $restaurant): JsonResponse
+    {
+        $attributes = $request->all();
+
+        if (isset($attributes['logo'])) {
+            // delete old image
+            $oldImage = $restaurant->image;
+            Storage::disk('images')->delete($oldImage);
+            // upload image
+            $folder = rand(1, 100) . '/' . rand(1, 100) . '/' . rand(1, 100);
+            $ext = $attributes['logo']->getClientOriginalExtension();
+            $path = $attributes['logo']->storeAs($folder, uniqid() . '.' . $ext, 'images');
+            $attributes['logo'] = $path;
+        }
+
+        $restaurant->update($attributes);
+
+        $data = new RestaurantResource($restaurant);
+
+        return response()->json(['data' => $data, 'status' => 200, 'message' => __('messages.restaurant_updated')]);
+    }
+
     /**
      *
      * Delete restaurant item.
