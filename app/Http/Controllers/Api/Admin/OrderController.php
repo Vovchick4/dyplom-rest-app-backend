@@ -120,7 +120,7 @@ class OrderController extends Controller
             $restaurantId = $request->header('restaurant');
         }
 
-        $perPage = (int) request('per_page', 9);
+        $perPage = (int) request('per_page', 20);
         $orders = Order::where('restaurant_id', $restaurantId)
             ->when(request('is_takeaway') !== null, function ($query) {
                 $query->where('orders.is_takeaway', request('is_takeaway'));
